@@ -149,7 +149,13 @@ def main() -> None:
     parser.add_argument(
         "termo",
         type=str,
-        help="Termo de busca",
+        help="Termo de busca (texto literal ou expressão regular)",
+    )
+    parser.add_argument(
+        "-r",
+        "--regex",
+        action="store_true",
+        help="Usar expressão regular (padrão: False)",
     )
     parser.add_argument(
         "-d",
@@ -200,12 +206,13 @@ def main() -> None:
         return None
 
     # Buscando termo
+    _termo = re.escape(args.termo) if not args.regex else args.termo
     LINHAS = []
     for arquivo in arquivos:
         for linha in ler_arquivo(arquivo):
             if linha is None:
                 continue
-            elif linha_valida := buscar_termo(linha, termo=args.termo):
+            elif linha_valida := buscar_termo(linha, termo=_termo):
                 LINHAS.append(linha_valida)
 
     # Devolver resultados
