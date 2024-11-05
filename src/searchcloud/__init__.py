@@ -51,7 +51,7 @@ def ler_arquivos(diretorio: Path | str, extensao: str) -> list[Path]:
     Ler arquivos de um diretorio e retornar uma lista de arquivos.
 
     Args:
-        diretorio (Path | str): Caminho para o diretório.
+        diretorio (Path | str): Diretório de busca ou arquivo.
         extensao (str): Extensão dos arquivos a serem buscados.
 
     Returns:
@@ -60,10 +60,16 @@ def ler_arquivos(diretorio: Path | str, extensao: str) -> list[Path]:
     if not isinstance(diretorio, Path):
         diretorio = Path(diretorio)
 
-    print(f"Buscando por arquivos com extensão .{extensao} no diretório: {diretorio}")
-
-    tmp = [arq if arq.is_file() else None for arq in diretorio.glob(f"**/*.{extensao}")]
-    arquivos = list(filter(None, tmp))
+    if diretorio.is_file():
+        arquivos = [diretorio]
+    else:
+        print(
+            f"Buscando por arquivos com extensão .{extensao} no diretório: {diretorio}"
+        )
+        tmp = [
+            arq if arq.is_file() else None for arq in diretorio.glob(f"**/*.{extensao}")
+        ]
+        arquivos = list(filter(None, tmp))
 
     print(f"Total de arquivos encontrados: {len(arquivos)}")
     if VERBOSO:
