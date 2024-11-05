@@ -158,6 +158,12 @@ def main() -> None:
         help="Usar expressão regular (padrão: False)",
     )
     parser.add_argument(
+        "-i",
+        "--ignorecase",
+        action="store_true",
+        help="Ignorar maiúsculas e minúsculas (padrão: False)",
+    )
+    parser.add_argument(
         "-d",
         "--diretorio",
         default=".",
@@ -206,7 +212,12 @@ def main() -> None:
         return None
 
     # Buscando termo
-    _termo = re.escape(args.termo) if not args.regex else args.termo
+    _flags = re.IGNORECASE if args.ignorecase else 0
+    _termo = (
+        re.compile(re.escape(args.termo), flags=_flags)
+        if not args.regex
+        else re.compile(args.termo, flags=_flags)
+    )
     LINHAS = []
     for arquivo in arquivos:
         for linha in ler_arquivo(arquivo):
