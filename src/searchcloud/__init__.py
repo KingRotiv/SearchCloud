@@ -227,12 +227,12 @@ def main() -> None:
                 LINHAS.append(linha_valida)
 
     # Devolver resultados
+    print(f"Total de linhas encontradas: {len(LINHAS)}")
     if args.salvar:
         with open(args.salvar, "w") as arquivo:
             arquivo.write("\n".join(LINHAS))
         print(f"Resultados salvo em: {args.salvar}")
     else:
-        print(f"Total de linhas encontradas: {len(LINHAS)}")
         print("Use -s para salvar os resultados")
 
     # Mostrar tempo de execução
