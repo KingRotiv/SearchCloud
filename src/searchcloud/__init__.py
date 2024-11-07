@@ -114,13 +114,13 @@ def ler_arquivo(arquivo: Path) -> Generator[str, Any, None]:
         yield None
 
 
-def buscar_termo(linha: str, termo: str) -> str | None:
+def buscar_termo(linha: str, termo: re.Pattern) -> str | None:
     """
     Buscar um termo em uma linha.
 
     Args:
         linha (str): Linha a ser pesquisada.
-        termo (str): Termo a ser pesquisado.
+        termo (re.Pattern): Termo a ser pesquisado.
 
     Returns:
         str | None: Linha encontrada.
