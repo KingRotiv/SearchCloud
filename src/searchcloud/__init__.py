@@ -218,22 +218,40 @@ def main() -> None:
         if not args.regex
         else re.compile(args.termo, flags=_flags)
     )
-    LINHAS = []
-    for arquivo in arquivos:
-        for linha in ler_arquivo(arquivo):
-            if linha is None:
-                continue
-            elif linha_valida := buscar_termo(linha, termo=_termo):
-                LINHAS.append(linha_valida)
 
     # Devolver resultados
-    print(f"Total de linhas encontradas: {len(LINHAS)}")
+    total_resultados = 0
     if args.salvar:
-        with open(args.salvar, "w") as arquivo:
-            arquivo.write("\n".join(LINHAS))
+        # Gravando tudo na memória
+        if BUFFER:
+            LINHAS = []
+            for arquivo in arquivos:
+                for linha in ler_arquivo(arquivo):
+                    if linha is None:
+                        continue
+                    elif linha_valida := buscar_termo(linha, termo=_termo):
+                        LINHAS.append(linha_valida)
+            total_resultados = len(LINHAS)
+        # Gravando com buffer automatico
+        else:
+            with open(args.salvar, "w") as arquivo:
+                for arquivo_analise in arquivos:
+                    for linha in ler_arquivo(arquivo_analise):
+                        if linha is None:
+                            continue
+                        elif linha_valida := buscar_termo(linha, termo=_termo):
+                            total_resultados += 1
+                            arquivo.write(linha_valida + "\n")
         print(f"Resultados salvo em: {args.salvar}")
     else:
+        for arquivo in arquivos:
+            for linha in ler_arquivo(arquivo):
+                if linha is None:
+                    continue
+                elif buscar_termo(linha, termo=_termo):
+                    total_resultados += 1
         print("Use -s para salvar os resultados")
+    print(f"Total de linhas encontradas: {total_resultados}")
 
     # Mostrar tempo de execução
     end_time = time.time()
