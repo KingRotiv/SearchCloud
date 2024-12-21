@@ -232,9 +232,12 @@ def main() -> None:
                     elif linha_valida := buscar_termo(linha, termo=_termo):
                         LINHAS.append(linha_valida)
             total_resultados = len(LINHAS)
+            if total_resultados > 0:
+                with open(args.salvar, mode="w", encoding="utf-8") as arquivo:
+                    arquivo.write("\n".join(LINHAS))
         # Gravando com buffer automatico
         else:
-            with open(args.salvar, "w") as arquivo:
+            with open(args.salvar, mode="w", encoding="utf-8") as arquivo:
                 for arquivo_analise in arquivos:
                     for linha in ler_arquivo(arquivo_analise):
                         if linha is None:
